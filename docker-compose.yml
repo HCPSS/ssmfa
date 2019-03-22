@@ -123,6 +123,8 @@ services:
         published: 2525
         protocol: tcp
         mode: host
+    environment:
+      - MAIL_DOMAIN=example.dev
 volumes:
   db: {}
   jwt: {}
