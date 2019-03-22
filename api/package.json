@@ -1,0 +1,31 @@
+{
+  "name": "ssmfa-api",
+  "version": "1.0.0",
+  "description": "Self-Service MFA API",
+  "main": "server.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hcpss/ssmfa.git"
+  },
+  "author": "Nick Vissari",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hcpss/ssmfa/issues"
+  },
+  "homepage": "https://github.com/hcpss/ssmfa#readme",
+  "dependencies": {
+    "express": "^4.16.4",
+    "express-jwt": "^5.3.1",
+    "isemail": "^3.2.0",
+    "jsonwebtoken": "^8.5.0",
+    "moment-timezone": "^0.5.23",
+    "morgan": "^1.9.1",
+    "nodemailer": "^5.1.1",
+    "redis": "^2.8.0"
+  }
+}

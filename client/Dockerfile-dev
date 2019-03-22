@@ -1,0 +1,15 @@
+FROM node:10 as packages
+
+RUN apt-get update && apt-get install -y dumb-init
+
+FROM node:10
+
+LABEL maintainer="Nick Vissari <nvissari@hcpss.org>"
+
+COPY --from=packages /usr/bin/dumb-init /usr/bin/dumb-init
+
+RUN npm install -g @angular/cli
+
+WORKDIR /home/node/app
+
+CMD ["dumb-init", "/home/node/app/docker-entrypoint-dev.sh"]

@@ -1,0 +1,4 @@
+Run create-environment-files.sh to create environment.ts from environment
+variables defined in docker-compose. This should happen at build time and you
+may have to run it manually if you define a new environment variable in
+docker-compose.yml

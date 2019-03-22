@@ -1,0 +1,28 @@
+<div *ngIf="!resetSent">
+  <p>
+    Multi-Factor Authentication (MFA) protects your account by requiring you to enter a code from your mobile phone when you login. If someone steals your username and password, they won't be able to access your account without your mobile phone. <a href="{{supportUrl}}" target="_blank">More info</a>
+  </p>
+  <div class="statusList">
+    <span class="statusIcon">
+      <i class="fas fa-shield-alt fa-lg"></i>
+    </span>
+    Your account is protected by MFA. <a href="{{supportUrl}}" target="_blank">Request to remove</a>
+  </div>
+  <div class="statusList">
+    <span class="statusIcon">
+      <i class="fas fa-at fa-lg"></i>
+    </span>
+    Your recovery email is <strong>{{recoveryEmail}}</strong>. <a href="{{supportUrl}}" target="_blank">Request to change</a>
+  </div>
+  <br>
+  <p>
+    If you lost your device or settings in the <a href="https://www.microsoft.com/en-us/account/authenticator" target="_blank">The Microsoft Authenticator App</a>, you can restart the MFA enrollment process.
+  </p>
+  <button mat-raised-button color="primary" (click)="startMFAReset()">Reset MFA settings</button>
+</div>
+<div *ngIf="resetSent">
+  <p>
+    We sent an email to <strong>{{recoveryEmail}}</strong>. Please click the link in the email to continue.
+  </p>
+  <button mat-raised-button color="primary" (click)="startMFAReset()">Send again</button>
+</div>

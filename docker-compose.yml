@@ -1,0 +1,128 @@
+version: '3.5'
+services:
+  api:
+    image: ssmfa-api:dev
+    build:
+      context: ./api/
+      dockerfile: Dockerfile-dev
+    environment:
+      - MFA_BASE_URL=https://ssmfa.example.com
+      - MFA_TZ=America/New_York
+      - MFA_EXCLUDED_DOMAINS=example.com,example.net,example.us
+      - MFA_LINKS_EXPIRE=1h
+      - MFA_SMTP_HOST=mail
+      - MFA_SMTP_PORT=25
+      - MFA_FROM_EMAIL="Self-Service MFA" <noreply@example.com>
+      - MFA_RECOVERY_SUBJECT=Please verify your personal email address
+      - MFA_RESET_SUBJECT=Please verify your identity
+      - MFA_JWT_AUTH_KEY_URL=http://jwt/sso-jwt/jwt.pub
+      - MFA_SEARCH_SERVERS=coredcs.example.com,coredcs.childdomain.example.com
+      - MFA_SUPPORT_URL=https://docs.microsoft.com/en-us/azure/active-directory/authentication/concept-mfa-howitworks
+    ports:
+      - target: 9000
+        published: 9000
+        mode: host
+    volumes:
+      - type: bind
+        source: ./api
+        target: /home/node/app
+      - type: volume
+        source: jwt
+        target: /jwt
+    depends_on:
+      - redis
+      - jwt
+      - mail
+  redis:
+    image: redis:5
+    volumes:
+      - type: volume
+        source: db
+        target: /data
+    ports:
+      - target: 6379
+        published: 6379
+        mode: host
+  client:
+    image: node:10
+    image: ssmfa-client:dev
+    build:
+      context: ./client/
+      dockerfile: Dockerfile-dev
+    environment:
+      - MFA_BASE_URL=https://ssmfa.example.com
+      - MFA_EXCLUDED_DOMAINS=example.com,example.net,example.us
+      - SSO_REDIRECT=https://ssmfa.example.com/sso-jwt/?target=https://ssmfa.example.com
+      - SSO_REQTOKEN=https://ssmfa.example.com/sso-jwt/?target=https://ssmfa.example.com&token
+      - MFA_FAVICONURL=https://image.flaticon.com/icons/svg/660/660606.svg
+      - MFA_LOGOURL=https://image.flaticon.com/icons/svg/1273/1273965.svg
+      - MFA_LOGOUTURL=https://ssmfa.example.com/sso-jwt/?logout
+      - MFA_SUPPORT_URL=https://docs.microsoft.com/en-us/azure/active-directory/authentication/concept-mfa-howitworks
+    ports:
+      - target: 9001
+        published: 9001
+        mode: host
+    volumes:
+      - type: bind
+        source: ./client
+        target: /home/node/app
+  haproxy:
+    build: ./haproxy-dev/
+    image: ssmfa-haproxy:dev
+    environment:
+      - DEV_COMMON_NAME=ssmfa.example.com
+      - DEV_ALT_NAMES=*.example.com,*.example.net,*.inst.example.com,example.com,example.net,127.0.0.1
+      - DEV_DEFAULT_BACKEND=client:9001
+      - DEV_SERVICE_ACLS=path_beg /api,path_beg /saml,path_beg /sso-jwt,path_beg /roundcube
+      - DEV_SERVICE_BACKENDS=api:9000,sso:80,jwt:80,mail:80
+    depends_on:
+      - api
+      - client
+      - sso
+    ports:
+      - target: 80
+        published: 80
+        protocol: tcp
+        mode: host
+      - target: 443
+        published: 443
+        protocol: tcp
+        mode: host
+  sso:
+    build: ./sso-dev/
+    image: ssmfa-sso:dev
+    ports:
+      - target: 80
+        published: 9002
+        protocol: tcp
+        mode: host
+    environment:
+      - MFA_BASE_URL=https://ssmfa.example.com
+      - MFA_LDAP_HOST=coredcs.example.com
+      - MFA_LDAP_PORT=3268
+      - MFA_LDAP_SEARCHBASES='DC=example,DC=com','DC=subdomain,DC=example,DC=com'
+      - MFA_LDAP_USERNAME=readuser@example.com
+      - MFA_LDAP_PASSWORD=readpassword
+  jwt:
+    build: ./jwt-dev/
+    image: ssmfa-jwt:dev
+    ports:
+      - target: 80
+        published: 9003
+        protocol: tcp
+        mode: host
+    environment:
+      - MFA_BASE_URL=https://ssmfa.example.com
+    depends_on:
+      - sso
+  mail:
+    build: ./mail-dev/
+    image: ssmfa-mail:dev
+    ports:
+      - target: 25
+        published: 2525
+        protocol: tcp
+        mode: host
+volumes:
+  db: {}
+  jwt: {}

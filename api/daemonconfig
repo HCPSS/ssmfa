@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+node /home/node/app/cli-daemon-api-key.js

@@ -1,0 +1,33 @@
+<div *ngIf="!start">
+  <h2>
+    Setup MFA
+  </h2>
+  <p>
+    Multi-Factor Authentication (MFA) protects your account by requiring you to enter a code from your mobile phone when you login. If someone steals your username and password, they won't be able to access your account without your mobile phone. <a href="{{supportUrl}}" target="_blank">More info</a>
+  </p>
+  <p>
+    To signup, you will need:
+  </p>
+  <ul>
+    <li>The computer your normally access your account from (optional but recommended)</li>
+    <li>Access to your personal email account</li>
+    <li>Apple iOS device or Android device</li>
+    <li><a href="https://www.microsoft.com/en-us/account/authenticator" target="_blank">The Microsoft Authenticator App</a></li>
+  </ul>
+  <br>
+  <button class="startButton" (click)="changeStart()" mat-raised-button color="primary">Start MFA enrollment</button>
+</div>
+
+<div *ngIf="start">
+  <p *ngIf="!addressVerificationSent">
+    Enter your personal email address to use for account recovery. If you replace or wipe your device, this address will be used to verify your identity.
+  </p>
+  <p *ngIf="addressVerificationSent">
+    We sent an email to <strong>{{lastAddressVerificationSent}}</strong>. Please click the link in the email to continue or enter a new email address.
+  </p>
+  <mat-form-field class="emailInput">
+    <input matInput placeholder="Email address" #addressInput name="requestedAddress" class="form-control" (keyup)="handleAddressChange(addressInput.value)" type="text" ngModel email>
+  </mat-form-field>
+  <br>
+  <button mat-raised-button color="primary" (click)="submitAddress(addressInput.value)" [disabled]="!addressValid">Use this email address</button>
+</div>

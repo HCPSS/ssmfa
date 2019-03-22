@@ -1,0 +1,15 @@
+[role="main"] {
+  padding-top: 130px;
+  padding-left: 10%;
+  padding-right: 10%;
+}
+@media screen and (max-width: 767px) {
+  [role="main"] {
+    padding-top: 20px;
+  }
+  .col-lg-10 {
+    -ms-flex: 0 0 100%;
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+}
