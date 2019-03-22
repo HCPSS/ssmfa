@@ -18,5 +18,8 @@ done
 # get the public key from the auth server
 curl -k -s -o /jwt/jwt_auth.pub $MFA_JWT_AUTH_KEY_URL
 
+# install node modules
+npm install
+
 # run nodemon as server
 su node -c "while true; do npm start; done"
