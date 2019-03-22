@@ -10,4 +10,13 @@ service postfix start
 
 postmap /etc/postfix/virtual
 
+service dovecot start
+
+service apache2 start
+
+curl -s -o /dev/null 127.0.0.1/mail/
+
+cat /rainloop/application.ini | sed "s/example.dev/$MAIL_DOMAIN/g" > /var/www/html/mail/data/_data_/_default_/configs/application.ini
+cp /rainloop/example.dev.ini "/var/www/html/mail/data/_data_/_default_/domains/$MAIL_DOMAIN.ini"
+
 sleep infinity

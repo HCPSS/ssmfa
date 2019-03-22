@@ -73,8 +73,8 @@ services:
       - DEV_COMMON_NAME=ssmfa.example.com
       - DEV_ALT_NAMES=*.example.com,*.example.net,*.inst.example.com,example.com,example.net,127.0.0.1
       - DEV_DEFAULT_BACKEND=client:9001
-      - DEV_SERVICE_ACLS=path_beg /api,path_beg /saml,path_beg /sso-jwt
-      - DEV_SERVICE_BACKENDS=api:9000,sso:80,jwt:80
+      - DEV_SERVICE_ACLS=path_beg /api,path_beg /saml,path_beg /sso-jwt,path_beg /mail
+      - DEV_SERVICE_BACKENDS=api:9000,sso:80,jwt:80,mail:80
     depends_on:
       - api
       - client
