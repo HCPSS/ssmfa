@@ -145,9 +145,9 @@ Running `docker-compose up` on this project will give you two services running i
 
 ### Installing the daemon
 
-The daemon service is a powershell script that uses the ActiveDirectory and MSOnline modules to resolve UPNs from GUIDs and make the appropriate changes to Office 365. The daemon will check in with the API, do whatever work needs to be done, then sleeps for a minute. You can run the daemon manually or install it as a service.
+The daemon service is a powershell script that uses the ActiveDirectory and MSOnline modules to resolve UPNs from GUIDs and make the appropriate changes to Office 365. The daemon will check in with the API, do whatever work needs to be done, then sleeps for a minute and does it all over again. You can run the daemon manually or install it as a service.
 
-I have tried to make installing the daemon install process as painless as possible by creating a setup script. First get the configuration variables from the API.
+I have tried to make the daemon install process as painless as possible by creating a setup script. First get the configuration variables from the API.
 
 ```
 $ docker exec ssmfa_api_1 daemonconfig
