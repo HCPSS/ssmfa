@@ -174,7 +174,7 @@ If you have such a service that can hand out JWTs to APIs you should use it. Whe
 
 ### Building for production
 
-Once you are happy with your changes you can build production images for deployment. Both the client and API have two Dockerfiles; `Dockerfile` and `Dockerfile-dev`. Modify the `docker-compose.yml` to build using `Dockerfile`. It's important to observe the contenct of `client/src/environments/environment.prod.js` before you build your production image. This file was created when the development environment was launched and used the environment variables from `docker.compose.yml`, see `client/docker-entrypoint-dev.sh`. You can modify this file manually of course, if there are significant differences between your dev and prod environments.
+Once you are happy with your changes you can build production images for deployment. Both the client and API have two Dockerfiles; `Dockerfile` and `Dockerfile-dev`. Modify the `docker-compose.yml` to build using `Dockerfile`. It's important to observe the content of `client/src/environments/environment.prod.js` before you build your production image. This file was created when the development environment was launched and used the environment variables from `docker-compose.yml`, see `client/docker-entrypoint-dev.sh`. You can modify this file manually of course, if there are significant differences between your dev and prod environments.
 
 ### Contributing
 
