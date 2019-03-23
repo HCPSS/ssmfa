@@ -11,8 +11,6 @@ SSMFA was designed to be deployed in an environment with hybrid on-prem AD and O
 
 ## Quickstart
 
-![SSMFA Components](https://raw.githubusercontent.com/wiki/HCPSS/ssmfa/images/ssmfa.svg?sanitize=true)
-
 To begin development on SSMFA for your environment, you'll need a development system. I recommend linux with docker and docker-compose installed. The hostname for SSMFA and all the dev services is set to `ssmfa.example.com`. Create an entry in your `/etc/hosts` file for this name.
 
 ### Clone the repo, build, up
@@ -98,4 +96,46 @@ $ docker exec -it ssmfa_redis_1 redis-cli
 "pending"
 127.0.0.1:6379> 
 ```
+
+## Settings
+
+![SSMFA Components](https://raw.githubusercontent.com/wiki/HCPSS/ssmfa/images/ssmfa.svg?sanitize=true)
+
+SSO, JWT, Mail, and HAProxy are all services that are only relevant to the development environment and exist merely for testing and demonstration purposes. Client, API, Redis, and Daemon are the SSMFA production services. There are many environment variables that can be configured for your environment.
+
+| Service | Variable             | Description                                                  |
+| ------- | -------------------- | ------------------------------------------------------------ |
+| API     | MFA_BASE_URL         | The desired URL for SSMFA                                    |
+|         | MFA_TZ               | The desired timezone for logs                                |
+|         | MFA_EXCLUDED_DOMAINS | Comma seperated list of email domains users cannot use       |
+|         | MFA_LINKS_EXPIRE     | Time to allow verification links to survive                  |
+|         | MFA_SMTP_HOST        | The SMTP server to send email                                |
+|         | MFA_SMTP_PORT        | The listener of the SMTP server                              |
+|         | MFA_FROM_EMAIL       | The from address of emails sent by SSMFA                     |
+|         | MFA_RECOVERY_SUBJECT | The subject line of the email establishing a recovery address |
+|         | MFA_RESET_SUBJECT    | The subject line of the email verifying a personal email for setting reset |
+|         | MFA_JWT_AUTH_KEY_URL | URL of the public key for JWT user authentication            |
+|         | MFA_SEARCH_SERVERS   | Comma seperated list of search servers to resolve GUIDs from AD |
+|         | MFA_SUPPORT_URL      | URL to an MFA support page for users                         |
+| Client  | MFA_BASE_URL         | The desired URL for SSMFA                                    |
+|         | MFA_EXCLUDED_DOMAINS | Comma seperated list of email domains users cannot use       |
+|         | SSO_REDIRECT         | URL of the SSO server to send users that aren't authenticated with the API |
+|         | SSO_REQTOKEN         | URL of the SSO server to get a JWT for authentication with the API |
+|         | MFA_FAVICONURL       | URL to the desired favicon.ico file                          |
+|         | MFA_LOGOURL          | URL to the desired logo image file                           |
+|         | MFA_LOGOUTURL        | URL of the SSO server to process a logout                    |
+|         | MFA_SUPPORT_URL      | URL to an MFA support page for users                         |
+| HAProxy | DEV_COMMON_NAME      | FQDN of SSMFA dev system                                     |
+|         | DEV_ALT_NAMES        | Comma seperated list of alt names                            |
+|         | DEV_DEFAULT_BACKEND  | The backend server for the root path /                       |
+|         | DEV_SERVICE_ACLS     | Comma seperated list of haproxy ACLs that coincide with backends |
+|         | DEV_SERVICE_BACKENDS | Comma seperated list of haproxy backends that coincide with ACLs |
+| SSO     | MFA_BASE_URL         | The URL of the dev SSO IdP server                            |
+|         | MFA_LDAP_HOST        | LDAP server (if you have one)                                |
+|         | MFA_LDAP_PORT        | LDAP port (if you have one)                                  |
+|         | MFA_LDAP_SEARCHBASES | LDAP search bases (if you have them)                         |
+|         | MFA_LDAP_USERNAME    | LDAP read user (if you have one)                             |
+|         | MFA_LDAP_PASSWORD    | LDAP read user password (if you have one)                    |
+| JWT     | MFA_BASE_URL         | The URL of the dev SSO SP server                             |
+| Mail    | MAIL_DOMAIN          | The domain that will act as a personal email domain for testing |
 
