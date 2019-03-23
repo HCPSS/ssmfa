@@ -143,6 +143,25 @@ SSO, JWT, Mail, and HAProxy are all services that are only relevant to the devel
 
 Running `docker-compose up` on this project will give you two services running in development mode; Angular 7, and expressjs running with nodemon. Do not use these in production. As you make changes to the project your client and API will reload/restart automatically, enabling you to see the changes real time.
 
+### Installing the daemon
+
+The daemon service is a powershell script that uses the ActiveDirectory and MSOnline modules to resolve UPNs from GUIDs and make the appropriate changes to Office 365. The daemon will check in with the API, do whatever work needs to be done, then sleeps for a minute. You can run the daemon manually or install it as a service.
+
+I have tried to make installing the daemon install process as painless as possible by creating a setup script. First get the configuration variables from the API.
+
+```
+$ docker exec ssmfa_api_1 daemonconfig
+Base URL: https://ssmfa.example.com
+API Key: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYWVtb24iOnRydWUsImlhdCI6MTU1MzM1MjkxMn...
+Run Setup.ps1 on the windows system
+```
+
+Then copy Daemon.ps1 and Setup.ps1 to a windows box and run Setup.ps1 from an elevated prompt as the service account. The script will check the appropriate modules are available and will install them if they are missing. It will also install chocolatey and nssm if you chose to install it as a service.
+
+![Powershell](https://raw.githubusercontent.com/wiki/HCPSS/ssmfa/images/powershell.png)
+
+You can see the password and API key are stored as secure strings, because why not.
+
 ### Authentication
 
 SSMFA client is a single-page application written in Angular 7. The API is written in node using expressjs. When the user first loads the web client, it checks for the existence of an authentication string in the browser's local storage. If this doesn't exist, it requests one from `SSO_REQTOKEN`. If it doesn't get a good response from `SSO_REQTOKEN`, it redirects to `SSO_REDIRECT`.  `SSO_REQTOKEN` and `SSO_REDIRECT` are both the JWT service. The JWT service is a simpleSAMLphp application configured as a SAML Service Provider (SP) that reuires authentication with the SAML Identity Provider (IdP) and hands out JWTs that expire in 10 minutes. The JWT contains the objectGUID from SAML IdP.  
