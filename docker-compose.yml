@@ -18,10 +18,6 @@ services:
       - MFA_JWT_AUTH_KEY_URL=http://jwt/sso-jwt/jwt.pub
       - MFA_SEARCH_SERVERS=coredcs.example.com,coredcs.childdomain.example.com
       - MFA_SUPPORT_URL=https://docs.microsoft.com/en-us/azure/active-directory/authentication/concept-mfa-howitworks
-    ports:
-      - target: 9000
-        published: 9000
-        mode: host
     volumes:
       - type: bind
         source: ./api
@@ -39,10 +35,6 @@ services:
       - type: volume
         source: db
         target: /data
-    ports:
-      - target: 6379
-        published: 6379
-        mode: host
   client:
     image: node:10
     image: ssmfa-client:dev
@@ -58,10 +50,6 @@ services:
       - MFA_LOGOURL=https://image.flaticon.com/icons/svg/1273/1273965.svg
       - MFA_LOGOUTURL=https://ssmfa.example.com/sso-jwt/?logout
       - MFA_SUPPORT_URL=https://docs.microsoft.com/en-us/azure/active-directory/authentication/concept-mfa-howitworks
-    ports:
-      - target: 9001
-        published: 9001
-        mode: host
     volumes:
       - type: bind
         source: ./client
@@ -91,11 +79,6 @@ services:
   sso:
     build: ./sso-dev/
     image: ssmfa-sso:dev
-    ports:
-      - target: 80
-        published: 9002
-        protocol: tcp
-        mode: host
     environment:
       - MFA_BASE_URL=https://ssmfa.example.com
       - MFA_LDAP_HOST=coredcs.example.com
@@ -106,11 +89,6 @@ services:
   jwt:
     build: ./jwt-dev/
     image: ssmfa-jwt:dev
-    ports:
-      - target: 80
-        published: 9003
-        protocol: tcp
-        mode: host
     environment:
       - MFA_BASE_URL=https://ssmfa.example.com
     depends_on:
@@ -118,11 +96,6 @@ services:
   mail:
     build: ./mail-dev/
     image: ssmfa-mail:dev
-    ports:
-      - target: 25
-        published: 2525
-        protocol: tcp
-        mode: host
     environment:
       - MAIL_DOMAIN=example.dev
 volumes:
