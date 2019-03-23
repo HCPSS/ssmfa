@@ -15,7 +15,7 @@ SSMFA was designed to be deployed in an environment with hybrid on-prem AD and O
 
 To begin development on SSMFA for your environment, you'll need a development system. I recommend linux with docker and docker-compose installed. The hostname for SSMFA and all the dev services is set to `ssmfa.example.com`. Create an entry in your `/etc/hosts` file for this name.
 
-##### Clone the repo, build, up
+### Clone the repo, build, up
 
 ```
 git clone https://github.com/HCPSS/ssmfa.git
@@ -25,3 +25,77 @@ docker-compose up
 ```
 
 Open your browser to `https://ssmfa.example.com`
+
+## Try it
+
+### MFA Enrollment
+
+The `client` should have redirected you to `jwt` which redirected you to `sso`. Fun right!?
+
+`username: test, password: test`
+
+![SSO Login](https://raw.githubusercontent.com/wiki/HCPSS/ssmfa/images/sso_login.png)
+
+Click `Start MFA Enrollment`
+
+![Setup MFA](https://raw.githubusercontent.com/wiki/HCPSS/ssmfa/images/setup_mfa.png)
+
+Submit an email address that ends in the domain `@example.dev`
+
+![Submit email](https://raw.githubusercontent.com/wiki/HCPSS/ssmfa/images/submit_email.png)
+
+Login to the dev mail server `https://ssmfa.example.com/mail`
+
+![Email Login](https://raw.githubusercontent.com/wiki/HCPSS/ssmfa/images/email_login.png)
+
+Click on the verify email link
+
+![Verify email](https://raw.githubusercontent.com/wiki/HCPSS/ssmfa/images/verify_email.png)
+
+Done, well not really. Nothing has happened on Office 365.
+
+![Continue](https://raw.githubusercontent.com/wiki/HCPSS/ssmfa/images/continue.png)
+
+You can see in the redis server we have stored the email address and the MFA status is pending. If the daemon was running it would enabled MFA on this GUID.
+
+ ```
+$ docker exec -it ssmfa_redis_1 redis-cli
+127.0.0.1:6379> keys *
+1) "MFA_RECOVERY_EMAIL:829de882-9de8-e882-9d82-e89d82e89d82"
+2) "MFA_STATUS:829de882-9de8-e882-9d82-e89d82e89d82"
+127.0.0.1:6379> get MFA_RECOVERY_EMAIL:829de882-9de8-e882-9d82-e89d82e89d82
+"mrsaru@example.dev"
+127.0.0.1:6379> get MFA_STATUS:829de882-9de8-e882-9d82-e89d82e89d82
+"pending"
+127.0.0.1:6379> 
+ ```
+
+### MFA Settings Reset
+
+Click `Reset MFA settings`
+
+![Done](https://raw.githubusercontent.com/wiki/HCPSS/ssmfa/images/done.png)
+
+![Reset request](https://raw.githubusercontent.com/wiki/HCPSS/ssmfa/images/reset_request.png)
+
+Go back to the mail client, `https://ssmfa.example.com/mail` and click on `Continue MFA settings reset process`
+
+![Reset](https://raw.githubusercontent.com/wiki/HCPSS/ssmfa/images/reset.png)
+
+Done. But not really.
+
+![Continue](https://raw.githubusercontent.com/wiki/HCPSS/ssmfa/images/continue.png)
+
+We can see there is another entry in redis for resetting the settings. If the daemon was running it would reset MFA on this GUID.
+
+```
+$ docker exec -it ssmfa_redis_1 redis-cli
+127.0.0.1:6379> keys *
+1) "MFA_RESET:829de882-9de8-e882-9d82-e89d82e89d82"
+2) "MFA_RECOVERY_EMAIL:829de882-9de8-e882-9d82-e89d82e89d82"
+3) "MFA_STATUS:829de882-9de8-e882-9d82-e89d82e89d82"
+127.0.0.1:6379> get MFA_RESET:829de882-9de8-e882-9d82-e89d82e89d82
+"pending"
+127.0.0.1:6379> 
+```
+
