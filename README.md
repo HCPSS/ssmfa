@@ -11,7 +11,7 @@ SSMFA was designed to be deployed in an environment with hybrid on-prem AD and O
 
 ## Quickstart
 
-![SSMFA Components](https://github.com/hcpss/ssmfa/wiki/images/ssmfa.svg)
+![SSMFA Components](https://raw.githubusercontent.com/wiki/HCPSS/ssmfa/images/ssmfa.svg?sanitize=true)
 
 To begin development on SSMFA for your environment, you'll need a development system. I recommend linux with docker and docker-compose installed. The hostname for SSMFA and all the dev services is set to `ssmfa.example.com`. Create an entry in your `/etc/hosts` file for this name.
 
@@ -25,4 +25,3 @@ docker-compose up
 ```
 
 Open your browser to `https://ssmfa.example.com`
-
