@@ -7,7 +7,7 @@ Enrolling users in Office 365 MFA can be very disruptive. After an admin enables
 
 SSMFA uses a personal email address to validate a user's identity. Ownership of the email address is established at enrollment. When an MFA settings reset is started the user must verify control of the personal email address on file by clicking on a link.
 
-SSMFA was designed to be deployed in an environment with hybrid on-prem AD and Office 365 accounts synced. You should expect to do a hefty amount of development work to get SSMFA to work the way you want in your environment. This project provides all of the necessary services (except Office 365 of course) to run SSMFA. 
+SSMFA was designed to be deployed in an environment with hybrid on-prem AD and Office 365 accounts synced. You should expect to do a hefty amount of development work to get SSMFA to work the way you want in your environment. This project provides all of the necessary services (except Office 365 of course) to run SSMFA.
 
 ## Quickstart
 
@@ -65,7 +65,7 @@ $ docker exec -it ssmfa_redis_1 redis-cli
 "mrsaru@example.dev"
 127.0.0.1:6379> get MFA_STATUS:829de882-9de8-e882-9d82-e89d82e89d82
 "pending"
-127.0.0.1:6379> 
+127.0.0.1:6379>
  ```
 
 ### MFA Settings Reset
@@ -94,7 +94,7 @@ $ docker exec -it ssmfa_redis_1 redis-cli
 3) "MFA_STATUS:829de882-9de8-e882-9d82-e89d82e89d82"
 127.0.0.1:6379> get MFA_RESET:829de882-9de8-e882-9d82-e89d82e89d82
 "pending"
-127.0.0.1:6379> 
+127.0.0.1:6379>
 ```
 
 ## Settings
@@ -143,6 +143,9 @@ SSO, JWT, Mail, and HAProxy are all services that are only relevant to the devel
 
 Running `docker-compose up` on this project will give you two services running in development mode; Angular 7, and expressjs running with nodemon. Do not use these in production. As you make changes to the project your client and API will reload/restart automatically, enabling you to see the changes real time.
 
+#### API
+The SSMFA API complies with the OpenAPI specification 3.0.0. Documentation for the API is available on [SwaggerHub](https://app.swaggerhub.com/apis/HCPSS/self-service-mfa/1.0).
+
 ### Installing the daemon
 
 The daemon service is a powershell script that uses the ActiveDirectory and MSOnline modules to resolve UPNs from GUIDs and make the appropriate changes to Office 365. The daemon will check in with the API, do whatever work needs to be done, then sleeps for a minute and does it all over again. You can run the daemon manually or install it as a service.
@@ -170,7 +173,7 @@ If you have such a service that can hand out JWTs to APIs you should use it. Whe
 
 ### Volumes
 
-`docker-compose.yml` defines two persistent volumes for SSMFA operation; `jwt` and `db`. `jwt` holds the private key for verifying email links. By default email links are only good for 1 hour, so it's not that important if this key is destroyed.  `db` contains the redis `rdb` file. I recommend running redis in an HA cluster with append-only enabled so you can roll back to any point in time if there is a corruption event. See my example gist here, https://gist.github.com/nickadam/aebc1a3290d42df529fa2c4afc6aab4f. 
+`docker-compose.yml` defines two persistent volumes for SSMFA operation; `jwt` and `db`. `jwt` holds the private key for verifying email links. By default email links are only good for 1 hour, so it's not that important if this key is destroyed.  `db` contains the redis `rdb` file. I recommend running redis in an HA cluster with append-only enabled so you can roll back to any point in time if there is a corruption event. See my example gist here, https://gist.github.com/nickadam/aebc1a3290d42df529fa2c4afc6aab4f.
 
 ### Building for production
 
