@@ -173,7 +173,7 @@ If you have such a service that can hand out JWTs to APIs you should use it. Whe
 
 ### Volumes
 
-`docker-compose.yml` defines two persistent volumes for SSMFA operation; `jwt` and `db`. `jwt` holds the private key for verifying email links. By default email links are only good for 1 hour, so it's not that important if this key is destroyed.  `db` contains the redis `rdb` file. I recommend running redis in an HA cluster with append-only enabled so you can roll back to any point in time if there is a corruption event. See my example gist here, https://gist.github.com/nickadam/aebc1a3290d42df529fa2c4afc6aab4f.
+`docker-compose.yml` defines two persistent volumes for SSMFA operation; `jwt` and `db`. `jwt` holds the private key for verifying email links. By default email links are only good for 1 hour, so it's not that important if this key is destroyed. However, this key is also used to grant the daemon access to the API during the daemon setup process. If you replace the key in `jwt` you will have to update the API key by running Setup.ps1 again. `db` contains the redis `rdb` file. I recommend running redis in an HA cluster with append-only enabled so you can roll back to any point in time if there is a corruption event. See my example gist here, https://gist.github.com/nickadam/aebc1a3290d42df529fa2c4afc6aab4f.
 
 ### Building for production
 
