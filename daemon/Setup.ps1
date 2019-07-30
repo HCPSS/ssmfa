@@ -64,7 +64,7 @@ if(-not (Is-Admin)){
 }
 
 # Make sure msonline is installed
-if(-not (Has-AD)){
+if(-not (Has-MSOnline)){
   Write-Host 'Installing MSOnline'
   Install-Module MSOnline
 }
